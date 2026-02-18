@@ -1,3 +1,5 @@
+import os
+
 """
 Django settings for octofit_tracker project.
 
@@ -25,7 +27,12 @@ SECRET_KEY = 'django-insecure-(!+o1_@4$3t-&ht@nwhfevvl-62))&i)q5$fvjgk_+i=2x7^jc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+codespace_name = os.environ.get('CODESPACE_NAME')
+codespace_host = f"{codespace_name}-8000.app.github.dev" if codespace_name else None
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+if codespace_host:
+    ALLOWED_HOSTS.append(codespace_host)
+ALLOWED_HOSTS.append('*')
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True

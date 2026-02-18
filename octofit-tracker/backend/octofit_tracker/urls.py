@@ -14,8 +14,26 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+
 from django.urls import path
+from django.http import JsonResponse, HttpResponseRedirect
+import os
+def root_redirect(request):
+    return HttpResponseRedirect('/api/')
+
+def api_root(request):
+    codespace_name = os.environ.get('CODESPACE_NAME', 'localhost')
+    base_url = f"https://{codespace_name}-8000.app.github.dev" if codespace_name != 'localhost' else "http://localhost:8000"
+    return JsonResponse({
+        'activities': f"{base_url}/api/activities/",
+        'users': f"{base_url}/api/users/",
+        'teams': f"{base_url}/api/teams/",
+        'leaderboard': f"{base_url}/api/leaderboard/",
+        'workouts': f"{base_url}/api/workouts/",
+    })
 
 urlpatterns = [
+    path('', root_redirect),
     path('admin/', admin.site.urls),
+    path('api/', api_root),
 ]
